@@ -24,7 +24,7 @@ const addStudent = async (req, res) => {
 
   try {
     const { name, age, course } = req.body;
-    const newStudent = await studentModel.create({ name, age, course });
+    const newStudent = await studentModel.create(req.body);
     res.status(200).json({
       sucess: true,
       data: newStudent,
@@ -43,7 +43,7 @@ const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;
     const updatedStudent = await studentModel.findByIdAndUpdate(id, req.body, {
-      new: true, // Yeh option updated document return karta hai
+      returnDocument: "after", // Yeh option updated document return karta hai
       runValidators: true, // Update ke waqt bhi schema rules check honge
     });
 
