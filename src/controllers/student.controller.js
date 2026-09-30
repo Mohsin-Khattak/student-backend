@@ -64,21 +64,22 @@ const updateStudent = async (req, res) => {
 //delete student
 const deleteStudent = async (req, res) => {
   try {
-    const { id } = req.body();
-    const student = await studentModel.findByIdAndDelete(id);
-    if (!student) {
+    const { id } = req.params; // URL se ID nikalne ke liye
+    const deletedStudent = await studentModel.findByIdAndDelete(id);
+
+    if (!deletedStudent) {
       return res.status(404).json({
         sucess: false,
-        message: "student does not exists",
+        message: "Student nahi mila!",
       });
     }
+
     res.status(200).json({
       sucess: true,
-      message: "student delete sucessfully",
-      data: student,
+      message: "Student successfully delete ho gaya!",
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       sucess: false,
       message: error.message,
     });
