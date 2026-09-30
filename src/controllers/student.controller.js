@@ -4,7 +4,7 @@ const studentModel = require("../models/student.model");
 const getStudent = async (req, res) => {
   try {
     const students = await studentModel.find({});
-    res.status(201).json({
+    res.status(200).json({
       sucess: true,
       count: students.length,
       data: students,
