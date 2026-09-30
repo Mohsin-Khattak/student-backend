@@ -23,3 +23,8 @@ app.get("/test", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running at port ${PORT}`);
 });
+// 🔍 Yeh line har request ko logs mein print kar degi!
+app.use((req, res, next) => {
+  console.log(`📥 Incoming Request: [${req.method}] ${req.url}`);
+  next();
+});
