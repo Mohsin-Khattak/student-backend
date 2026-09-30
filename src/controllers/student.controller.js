@@ -40,7 +40,7 @@ const addStudent = async (req, res) => {
 const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedStudent = await Student.findByIdAndUpdate(id, req.body, {
+    const updatedStudent = await studentModel.findByIdAndUpdate(id, req.body, {
       new: true, // Yeh option updated document return karta hai
       runValidators: true, // Update ke waqt bhi schema rules check honge
     });
