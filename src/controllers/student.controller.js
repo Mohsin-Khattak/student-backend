@@ -20,6 +20,8 @@ const getStudent = async (req, res) => {
 
 // add new student
 const addStudent = async (req, res) => {
+  console.log("🔥 POST /api/students wali request hit ho gayi hai!", req.body); // <-- Yeh line dalein
+
   try {
     const { name, age, course } = req.body;
     const newStudent = await studentModel.create({ name, age, course });
