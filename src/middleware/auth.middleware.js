@@ -20,6 +20,7 @@ const verifyToken = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
+    console.log("errorr check karo", error.message);
     return res.status(403).json({
       success: false,
       message: "Invalid ya Expired Token!",

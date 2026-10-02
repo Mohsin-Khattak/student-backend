@@ -7,13 +7,12 @@ const {
 } = require("../controllers/student.controller");
 const router = express.Router();
 const verifyToken = require("../middleware/auth.middleware");
-console.log("📂 student.routes.js file load ho gayi hai!");
+const verifyRole = require("../middleware/role.middleware");
+
 router.route("/").get(getStudent);
-
-router.post("/", verifyToken, addStudent);
-
+router.post("/", verifyToken, verifyRole(["admin"]), addStudent);
 router
   .route("/:id")
-  .put(verifyToken, updateStudent)
-  .delete(verifyToken, deleteStudent);
+  .put(verifyToken, verifyRole(["admin", "teacher"]), updateStudent)
+  .delete(verifyToken, verifyRole(["admin"]), deleteStudent);
 module.exports = router;
