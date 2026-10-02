@@ -6,9 +6,14 @@ const {
   deleteStudent,
 } = require("../controllers/student.controller");
 const router = express.Router();
-
+const verifyToken = require("../middleware/auth.middleware");
+console.log("📂 student.routes.js file load ho gayi hai!");
 router.route("/").get(getStudent);
-router.route("/").post(addStudent);
 
-router.route("/:id").put(updateStudent).delete(deleteStudent);
+router.post("/", verifyToken, addStudent);
+
+router
+  .route("/:id")
+  .put(verifyToken, updateStudent)
+  .delete(verifyToken, deleteStudent);
 module.exports = router;
