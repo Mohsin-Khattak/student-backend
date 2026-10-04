@@ -1,5 +1,6 @@
 const studentModel = require("../models/student.model");
-const deleteFileFromS3 = require("../middleware/upload.middleware");
+const { deleteFileFromS3 } = require("../middleware/upload.middleware");
+const userModel = require("../models/user.model");
 
 // get all student
 const getStudent = async (req, res) => {
@@ -98,17 +99,17 @@ const uploadProfileImage = async (req, res) => {
     }
 
     const studentId = req.user.id;
-    const student = await studentModel.findById(studentId);
+    const student = await userModel.findById(studentId);
     if (student && student.profileImage) {
       await deleteFileFromS3(student.profileImage);
     }
 
     const s3ImageUrl = req.file.location; // S3 ka public URL
 
-    const updatedStudent = await studentModel.findByIdAndUpdate(
+    const updatedStudent = await userModel.findByIdAndUpdate(
       studentId,
       { profileImage: s3ImageUrl },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     res.status(200).json({
