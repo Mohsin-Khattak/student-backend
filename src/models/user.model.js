@@ -22,6 +22,7 @@ const userSchema = new mongooes.Schema(
       enum: ["admin", "student", "teacher"],
       default: "student",
     },
+    profileImage: { type: String, default: null },
   },
   {
     timestamps: true,

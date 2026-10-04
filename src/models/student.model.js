@@ -14,6 +14,7 @@ const studentSchema = new mongooes.Schema(
       type: String,
       required: [true, "Course is required"],
     },
+    profileImage: { type: String, default: null },
   },
   {
     timestamps: true,
