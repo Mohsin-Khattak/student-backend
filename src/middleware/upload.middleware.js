@@ -1,6 +1,7 @@
 const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
   credentials: {
@@ -28,10 +29,12 @@ const deleteFileFromS3 = async (fileUrl) => {
     if (!fileUrl) return;
     const urlObj = new URL(fileUrl);
     const fileKey = decodeURIComponent(urlObj.pathname.substring(1)); // Remove leading '/'
+
     const deleteParams = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      key: fileKey,
+      Key: fileKey, // <--- Yahan 'Key' (capital K) hona chahiye
     };
+
     await s3.send(new DeleteObjectCommand(deleteParams));
     console.log("Purani file S3 se successfully delete ho gayi hai.");
   } catch (error) {

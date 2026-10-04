@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 const verifyToken = require("../middleware/auth.middleware");
 const verifyRole = require("../middleware/role.middleware");
-const upload = require("../middleware/upload.middleware");
+const { upload } = require("../middleware/upload.middleware");
 
 router.route("/").get(getStudent);
 router.post("/", verifyToken, verifyRole(["admin"]), addStudent);
