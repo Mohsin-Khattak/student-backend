@@ -29,7 +29,8 @@ const deleteFileFromS3 = async (fileUrl) => {
     if (!fileUrl) return;
     const urlObj = new URL(fileUrl);
     const fileKey = decodeURIComponent(urlObj.pathname.substring(1)); // Remove leading '/'
-
+    console.log("Deleting file from S3 - URL:", fileUrl);
+    console.log("Extracted File Key:", fileKey); // <--- Yeh terminal/logs mein check karein
     const deleteParams = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: fileKey, // <--- Yahan 'Key' (capital K) hona chahiye

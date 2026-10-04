@@ -136,7 +136,7 @@ const uploadDocument = async (req, res) => {
         ...(profileImage & { profileImage }),
         $push: { documents: { $each: certificates } },
       },
-      { new: true }
+      { returnDocument: "after" }
     );
     res.status(200).json({
       sucess: true,
