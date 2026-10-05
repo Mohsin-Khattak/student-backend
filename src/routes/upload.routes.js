@@ -11,7 +11,7 @@ router.post(
   uploadProfileImage
 );
 
-router.route(
+router.post(
   "/upload-document",
   verifyToken,
   upload.fields([
