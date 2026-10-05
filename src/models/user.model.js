@@ -23,7 +23,14 @@ const userSchema = new mongooes.Schema(
       default: "student",
     },
     profileImage: { type: String, default: null },
+    documents: [
+      {
+        url: { type: String },
+        title: { type: String }, // optional: document ka naam ya type (jaise CNIC, Degree)
+      },
+    ],
   },
+
   {
     timestamps: true,
   }

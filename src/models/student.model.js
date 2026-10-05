@@ -15,6 +15,12 @@ const studentSchema = new mongooes.Schema(
       required: [true, "Course is required"],
     },
     profileImage: { type: String, default: null },
+    documents: [
+      {
+        url: { type: String },
+        title: { type: String }, // optional: document ka naam ya type (jaise CNIC, Degree)
+      },
+    ],
   },
   {
     timestamps: true,
