@@ -17,7 +17,7 @@ router.route(
   upload.fields([
     { name: "profileImage", maxCount: 1 },
     {
-      name: "certificates",
+      name: "documents",
       maxCount: 5,
     },
   ]),
