@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verifyToken } = require("../middleware/auth.middleware"); // Aapka auth middleware
-const upload = require("../middleware/upload.middleware"); // Aapka multer-s3 middleware
+const { upload } = require("../middleware/upload.middleware"); // Aapka multer-s3 middleware
 
 const {
   uploadProfileImage,
