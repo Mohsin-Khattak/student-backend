@@ -6,6 +6,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const studentRoutes = require("./routes/student.routes");
 const authRoutes = require("./routes/auth.routes");
+const uploadRoutes = require("./routes/upload.routes");
 
 dotenv.config();
 connectDB();
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 // Routes
 app.use("/api/students", studentRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/file", uploadRoutes);
 
 // Server Listen (Yeh hamesha aakhir mein hota hai)
 app.listen(PORT, () => {
