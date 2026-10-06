@@ -1,9 +1,14 @@
+const express = require("express");
+const router = express.Router();
+const { verifyToken } = require("../middleware/auth.middleware"); // Aapka auth middleware
+const upload = require("../middleware/upload.middleware"); // Aapka multer-s3 middleware
+
 const {
   uploadProfileImage,
   uploadDocument,
 } = require("../controllers/upload.controller");
 
-// Yahan sirf middleware aur controller function attach kiya hai
+// 1. Profile Image Upload Route
 router.post(
   "/upload-profile",
   verifyToken,
@@ -11,15 +16,15 @@ router.post(
   uploadProfileImage
 );
 
+// 2. Documents & Profile Image Upload Route
 router.post(
   "/upload-document",
   verifyToken,
   upload.fields([
     { name: "profileImage", maxCount: 1 },
-    {
-      name: "documents",
-      maxCount: 5,
-    },
+    { name: "documents", maxCount: 5 },
   ]),
   uploadDocument
 );
+
+module.exports = router;

@@ -12,6 +12,7 @@ const uploadProfileImage = async (req, res) => {
 
     const studentId = req.user.id;
     const student = await userModel.findById(studentId);
+
     if (student && student.profileImage) {
       await deleteFileFromS3(student.profileImage);
     }
@@ -36,25 +37,41 @@ const uploadProfileImage = async (req, res) => {
 
 const uploadDocument = async (req, res) => {
   try {
-    const profileImage = req.files["profileImage"]
-      ? req.files["profileImage"][0].location
-      : null;
-    const documents = req.files["documents"]
-      ? req.files["documents"].map((file) => file.location)
-      : [];
+    const profileImage =
+      req.files && req.files["profileImage"]
+        ? req.files["profileImage"][0].location
+        : null;
+
+    const documents =
+      req.files && req.files["documents"]
+        ? req.files["documents"].map((file) => ({
+            url: file.location,
+            title: file.originalname,
+          }))
+        : [];
+
     const studentId = req.user.id;
-    const updateStudent = userModel.findByIdAndUpdate(
+
+    // Update data object banana
+    const updateData = {};
+    if (profileImage) {
+      updateData.profileImage = profileImage;
+    }
+    if (documents.length > 0) {
+      updateData.$push = { documents: { $each: documents } };
+    }
+
+    // 'await' yahan lazmi hai!
+    const updatedStudent = await userModel.findByIdAndUpdate(
       studentId,
-      {
-        ...(profileImage & { profileImage }),
-        $push: { documents: { $each: documents } },
-      },
+      updateData,
       { returnDocument: "after" }
     );
+
     res.status(200).json({
-      sucess: true,
+      success: true,
       message: "Documents successfully S3 par upload ho gaye hain!",
-      user: updateStudent,
+      user: updatedStudent,
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
