@@ -1,5 +1,14 @@
-const userModel = require("../models/user.model");
 const { deleteFileFromS3 } = require("../middleware/upload.middleware");
+const adminModel = require("../models/admin.model");
+const studentModel = require("../models/student.model");
+const teacherModel = require("../models/teacher.model");
+
+const getModelByRole = (role) => {
+  if (role === "admin") return adminModel;
+  if (role === "teacher") return teacherModel;
+  if (role === "student") return studentModel;
+  return null;
+};
 
 // S3 image upload aur DB update karne ka controller function
 const uploadProfileImage = async (req, res) => {
@@ -10,17 +19,25 @@ const uploadProfileImage = async (req, res) => {
         .json({ success: false, message: "Koi file upload nahi hui" });
     }
 
-    const studentId = req.user.id;
-    const student = await userModel.findById(studentId);
+    const userId = req.user.id;
+    const userRole = req.user.role;
+    const targetModel = getModelByRole(userRole);
+    if (!targetModel) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid user role!" });
+    }
 
-    if (student && student.profileImage) {
-      await deleteFileFromS3(student.profileImage);
+    const user = await targetModel.findById(userId);
+
+    if (user && user.profileImage) {
+      await deleteFileFromS3(user.profileImage);
     }
 
     const s3ImageUrl = req.file.location; // S3 ka public URL
 
-    const updatedStudent = await userModel.findByIdAndUpdate(
-      studentId,
+    const updateUser = await targetModel.findByIdAndUpdate(
+      userId,
       { profileImage: s3ImageUrl },
       { returnDocument: "after" }
     );
@@ -28,7 +45,7 @@ const uploadProfileImage = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "File successfully AWS S3 pe upload ho gayi hai",
-      user: updatedStudent,
+      user: updateUser,
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -50,7 +67,14 @@ const uploadDocument = async (req, res) => {
           }))
         : [];
 
-    const studentId = req.user.id;
+    const userId = req.user.id;
+    const userRole = req.user.role;
+    const targetModel = getModelByRole(userRole);
+    if (!targetModel) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid user role!" });
+    }
 
     // Update data object banana
     const updateData = {};
@@ -62,16 +86,14 @@ const uploadDocument = async (req, res) => {
     }
 
     // 'await' yahan lazmi hai!
-    const updatedStudent = await userModel.findByIdAndUpdate(
-      studentId,
-      updateData,
-      { returnDocument: "after" }
-    );
+    const updateUser = await targetModel.findByIdAndUpdate(userId, updateData, {
+      returnDocument: "after",
+    });
 
     res.status(200).json({
       success: true,
       message: "Documents successfully S3 par upload ho gaye hain!",
-      user: updatedStudent,
+      user: updateUser,
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
